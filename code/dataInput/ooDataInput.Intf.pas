@@ -20,6 +20,8 @@ type
     function ReadString(const Key: IKey): String;
     function ReadDateTime(const Key: IKey): TDateTime;
     function ReadChar(const Key: IKey): Char;
+    procedure EnterSection(const Key: IKey);
+    procedure ExitSection(const Key: IKey);
   end;
 
 implementation

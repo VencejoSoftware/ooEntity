@@ -20,6 +20,8 @@ type
     procedure WriteString(const Key: IKey; const Value: String);
     procedure WriteDateTime(const Key: IKey; const Value: TDateTime);
     procedure WriteChar(const Key: IKey; const Value: Char);
+    procedure EnterSection(const Key: IKey);
+    procedure ExitSection(const Key: IKey);
   end;
 
 implementation

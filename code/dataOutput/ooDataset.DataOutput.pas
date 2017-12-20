@@ -8,6 +8,7 @@ unit ooDataset.DataOutput;
 interface
 
 uses
+  SysUtils,
   DB,
   ooKey.Intf,
   ooDataOutput.Intf;
@@ -16,6 +17,7 @@ type
   TDatasetDataOutput = class sealed(TInterfacedObject, IDataOutput)
   strict private
     _Destination: TDataset;
+    _Section: String;
   public
     procedure WriteNull(const Key: IKey);
     procedure WriteInteger(const Key: IKey; const Value: Integer);
@@ -24,7 +26,8 @@ type
     procedure WriteString(const Key: IKey; const Value: String);
     procedure WriteDateTime(const Key: IKey; const Value: TDateTime);
     procedure WriteChar(const Key: IKey; const Value: Char);
-
+    procedure EnterSection(const Key: IKey);
+    procedure ExitSection(const Key: IKey);
     constructor Create(const Destination: TDataset);
     class function New(const Destination: TDataset): IDataOutput;
   end;
@@ -33,46 +36,57 @@ implementation
 
 procedure TDatasetDataOutput.WriteBoolean(const Key: IKey; const Value: Boolean);
 begin
-  _Destination.FieldByName(Key.AsString).AsBoolean := Value;
+  _Destination.FieldByName(_Section + Key.AsString).AsBoolean := Value;
 end;
 
 procedure TDatasetDataOutput.WriteChar(const Key: IKey; const Value: Char);
 begin
-  _Destination.FieldByName(Key.AsString).AsString := Value;
+  _Destination.FieldByName(_Section + Key.AsString).AsString := Value;
 end;
 
 procedure TDatasetDataOutput.WriteDateTime(const Key: IKey; const Value: TDateTime);
 begin
-  _Destination.FieldByName(Key.AsString).AsDateTime := Value;
+  _Destination.FieldByName(_Section + Key.AsString).AsDateTime := Value;
 end;
 
 procedure TDatasetDataOutput.WriteFloat(const Key: IKey; const Value: Extended);
 begin
 {$IFDEF FPC}
-  _Destination.FieldByName(Key.AsString).AsFloat := Value;
+  _Destination.FieldByName(_Section + Key.AsString).AsFloat := Value;
 {$ELSE}
-  _Destination.FieldByName(Key.AsString).AsExtended := Value;
+  _Destination.FieldByName(_Section + Key.AsString).AsExtended := Value;
 {$ENDIF}
 end;
 
 procedure TDatasetDataOutput.WriteInteger(const Key: IKey; const Value: Integer);
 begin
-  _Destination.FieldByName(Key.AsString).AsInteger := Value;
+  _Destination.FieldByName(_Section + Key.AsString).AsInteger := Value;
 end;
 
 procedure TDatasetDataOutput.WriteString(const Key: IKey; const Value: String);
 begin
-  _Destination.FieldByName(Key.AsString).AsString := Value;
+  _Destination.FieldByName(_Section + Key.AsString).AsString := Value;
 end;
 
 procedure TDatasetDataOutput.WriteNull(const Key: IKey);
 begin
-  _Destination.FieldByName(Key.AsString).Clear;
+  _Destination.FieldByName(_Section + Key.AsString).Clear;
+end;
+
+procedure TDatasetDataOutput.EnterSection(const Key: IKey);
+begin
+  _Section := _Section + Key.AsString + '_';
+end;
+
+procedure TDatasetDataOutput.ExitSection(const Key: IKey);
+begin
+  _Section := Copy(_Section, 1, Pred(Length(_Section) - Length(Key.AsString)));
 end;
 
 constructor TDatasetDataOutput.Create(const Destination: TDataset);
 begin
   _Destination := Destination;
+  _Section := EmptyStr;
 end;
 
 class function TDatasetDataOutput.New(const Destination: TDataset): IDataOutput;

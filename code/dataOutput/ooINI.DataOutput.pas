@@ -17,7 +17,7 @@ type
   TINIDataOutput = class sealed(TInterfacedObject, IDataOutput)
   strict private
     _Destination: TIniFile;
-    _Section: String;
+    _OriginSection, _Section: String;
   public
     procedure WriteNull(const Key: IKey);
     procedure WriteInteger(const Key: IKey; const Value: Integer);
@@ -26,9 +26,9 @@ type
     procedure WriteString(const Key: IKey; const Value: String);
     procedure WriteDateTime(const Key: IKey; const Value: TDateTime);
     procedure WriteChar(const Key: IKey; const Value: Char);
-
+    procedure EnterSection(const Key: IKey);
+    procedure ExitSection(const Key: IKey);
     constructor Create(const Destination: TIniFile; const Section: String);
-
     class function New(const Destination: TIniFile; const Section: String): IDataOutput; static;
   end;
 
@@ -69,10 +69,21 @@ begin
   _Destination.DeleteKey(_Section, Key.AsString);
 end;
 
+procedure TINIDataOutput.EnterSection(const Key: IKey);
+begin
+  _Section := Key.AsString;
+end;
+
+procedure TINIDataOutput.ExitSection(const Key: IKey);
+begin
+  _Section := _OriginSection;
+end;
+
 constructor TINIDataOutput.Create(const Destination: TIniFile; const Section: String);
 begin
   _Destination := Destination;
   _Section := Section;
+  _OriginSection := Section;
 end;
 
 class function TINIDataOutput.New(const Destination: TIniFile; const Section: String): IDataOutput;

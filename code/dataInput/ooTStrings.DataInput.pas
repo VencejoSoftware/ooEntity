@@ -16,6 +16,7 @@ type
   TTStringsDataInput = class sealed(TInterfacedObject, IDataInput)
   strict private
     _Source: TStrings;
+    _Section: String;
   public
     function IsNull(const Key: IKey): Boolean;
     function ReadInteger(const Key: IKey): Integer;
@@ -24,7 +25,8 @@ type
     function ReadString(const Key: IKey): String;
     function ReadDateTime(const Key: IKey): TDateTime;
     function ReadChar(const Key: IKey): Char;
-
+    procedure EnterSection(const Key: IKey);
+    procedure ExitSection(const Key: IKey);
     constructor Create(const Source: TStrings);
     class function New(const Source: TStrings): IDataInput;
   end;
@@ -58,7 +60,7 @@ end;
 
 function TTStringsDataInput.ReadString(const Key: IKey): String;
 begin
-  Result := _Source.Values[Key.AsString];
+  Result := _Source.Values[_Section + Key.AsString];
 end;
 
 function TTStringsDataInput.IsNull(const Key: IKey): Boolean;
@@ -66,9 +68,20 @@ begin
   Result := ReadString(Key) = #0;
 end;
 
+procedure TTStringsDataInput.EnterSection(const Key: IKey);
+begin
+  _Section := _Section + Key.AsString + '.';
+end;
+
+procedure TTStringsDataInput.ExitSection(const Key: IKey);
+begin
+  _Section := Copy(_Section, 1, Pred(Length(_Section) - Length(Key.AsString)));
+end;
+
 constructor TTStringsDataInput.Create(const Source: TStrings);
 begin
   _Source := Source;
+  _Section := EmptyStr;
 end;
 
 class function TTStringsDataInput.New(const Source: TStrings): IDataInput;

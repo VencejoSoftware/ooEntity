@@ -16,6 +16,7 @@ type
   TTStringsDataOutput = class sealed(TInterfacedObject, IDataOutput)
   strict private
     _Destination: TStrings;
+    _Section: String;
   public
     procedure WriteNull(const Key: IKey);
     procedure WriteInteger(const Key: IKey; const Value: Integer);
@@ -24,7 +25,8 @@ type
     procedure WriteString(const Key: IKey; const Value: String);
     procedure WriteDateTime(const Key: IKey; const Value: TDateTime);
     procedure WriteChar(const Key: IKey; const Value: Char);
-
+    procedure EnterSection(const Key: IKey);
+    procedure ExitSection(const Key: IKey);
     constructor Create(const Destination: TStrings);
     class function New(const Destination: TStrings): IDataOutput;
   end;
@@ -62,9 +64,9 @@ procedure TTStringsDataOutput.WriteString(const Key: IKey; const Value: String);
 var
   ExistIndex: Integer;
 begin
-  ExistIndex := _Destination.IndexOfName(Key.AsString);
+  ExistIndex := _Destination.IndexOfName(_Section + Key.AsString);
   if ExistIndex = - 1 then
-    _Destination.Append(Key.AsString + '=' + Value)
+    _Destination.Append(_Section + Key.AsString + '=' + Value)
   else
     _Destination.ValueFromIndex[ExistIndex] := Value;
 end;
@@ -74,9 +76,20 @@ begin
   WriteString(Key, #0);
 end;
 
+procedure TTStringsDataOutput.EnterSection(const Key: IKey);
+begin
+  _Section := _Section + Key.AsString + '.';
+end;
+
+procedure TTStringsDataOutput.ExitSection(const Key: IKey);
+begin
+  _Section := Copy(_Section, 1, Pred(Length(_Section) - Length(Key.AsString)));
+end;
+
 constructor TTStringsDataOutput.Create(const Destination: TStrings);
 begin
   _Destination := Destination;
+  _Section := EmptyStr;
 end;
 
 class function TTStringsDataOutput.New(const Destination: TStrings): IDataOutput;

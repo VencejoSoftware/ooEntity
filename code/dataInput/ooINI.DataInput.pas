@@ -17,7 +17,7 @@ type
   TINIDataInput = class sealed(TInterfacedObject, IDataInput)
   strict private
     _Source: TIniFile;
-    _Section: String;
+    _OriginSection, _Section: String;
   public
     function IsNull(const Key: IKey): Boolean;
     function ReadInteger(const Key: IKey): Integer;
@@ -26,9 +26,9 @@ type
     function ReadString(const Key: IKey): String;
     function ReadDateTime(const Key: IKey): TDateTime;
     function ReadChar(const Key: IKey): Char;
-
+    procedure EnterSection(const Key: IKey);
+    procedure ExitSection(const Key: IKey);
     constructor Create(const Source: TIniFile; const Section: String);
-
     class function New(const Source: TIniFile; const Section: String): IDataInput;
   end;
 
@@ -69,10 +69,21 @@ begin
   Result := not _Source.ValueExists(_Section, Key.AsString);
 end;
 
+procedure TINIDataInput.EnterSection(const Key: IKey);
+begin
+  _Section := Key.AsString;
+end;
+
+procedure TINIDataInput.ExitSection(const Key: IKey);
+begin
+  _Section := _OriginSection;
+end;
+
 constructor TINIDataInput.Create(const Source: TIniFile; const Section: String);
 begin
   _Source := Source;
   _Section := Section;
+  _OriginSection := Section;
 end;
 
 class function TINIDataInput.New(const Source: TIniFile; const Section: String): IDataInput;

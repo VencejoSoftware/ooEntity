@@ -4,7 +4,7 @@
 Attempt to implement the [domain model](https://en.wikipedia.org/wiki/Domain_model) concept in OO, with interfaces to marshall/unmarshall data in entity objects
 
 ### Documentation
-If not exists folder "doc" then run the batch "build_doc". The main entry is ./doc/index.html
+If not exists folder "code-documentation" then run the batch "build_doc". The main entry is ./doc/index.html
 
 ### Demo
 See tests code for examples of use.

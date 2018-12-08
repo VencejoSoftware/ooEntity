@@ -3,6 +3,16 @@
 # ooEntiy - Object pascal entity library
 Attempt to implement the [domain model](https://en.wikipedia.org/wiki/Domain_model) concept in OO, with interfaces to marshall/unmarshall data in entity objects
 
+### Example of TextKey definition
+```pascal
+var
+  Key: ITextKey;
+begin
+  // If the value is empty a error is raised
+  Key := TTextKey.New('ID');
+end;
+```
+
 ### Documentation
 If not exists folder "code-documentation" then run the batch "build_doc". The main entry is ./doc/index.html
 

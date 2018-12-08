@@ -1,13 +1,18 @@
-unit ooObjectA.Entity.Mock;
+{
+  Copyright (c) 2018, Vencejo Software
+  Distributed under the terms of the Modified BSD License
+  The full license is distributed with this software
+}
+unit ObjectAEntityMock;
 
 interface
 
 uses
   SysUtils,
   Generics.Collections,
-  ooKey,
-  ooDataInput.Intf, ooDataOutput.Intf,
-  ooEntity.Intf;
+  Key,
+  DataInput, DataOutput,
+  Entity;
 
 type
   IObjectAEntityMock = interface(IEntity)

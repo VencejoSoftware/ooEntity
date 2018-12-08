@@ -1,19 +1,19 @@
 {
-  Copyright (c) 2016, Vencejo Software
+  Copyright (c) 2018, Vencejo Software
   Distributed under the terms of the Modified BSD License
   The full license is distributed with this software
 }
-unit ooObjectB.Entity.Mock;
+unit ObjectBEntityMock;
 
 interface
 
 uses
   SysUtils,
   Generics.Collections,
-  ooKey,
-  ooDataInput.Intf, ooDataOutput.Intf,
-  ooEntity.Intf,
-  ooObjectA.Entity.Mock;
+  Key,
+  DataInput, DataOutput,
+  Entity,
+  ObjectAEntityMock;
 
 type
   IObjectBEntityMock = interface(IEntity)

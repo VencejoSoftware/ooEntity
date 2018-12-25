@@ -14,6 +14,9 @@ unit Statement;
 
 interface
 
+uses
+  IterableList;
+
 type
 {$REGION 'documentation'}
 {
@@ -29,6 +32,35 @@ type
     function Syntax: String;
   end;
 
+{$REGION 'documentation'}
+{
+  @abstract(Statement list interface)
+}
+{$ENDREGION}
+
+  IStatementList = interface(IIterableList<IStatement>)
+    ['{A7AF1832-AAC9-41AC-BB3B-E93B5F738E82}']
+  end;
+
+{$REGION 'documentation'}
+{
+  @abstract(Implementation of @link(IStatementList))
+  @member(
+    New Create a new @classname as interface
+  )
+}
+{$ENDREGION}
+
+  TStatementList = class sealed(TIterableList<IStatement>, IStatementList)
+  public
+    class function New: IStatementList;
+  end;
+
 implementation
+
+class function TStatementList.New: IStatementList;
+begin
+  Result := TStatementList.Create;
+end;
 
 end.

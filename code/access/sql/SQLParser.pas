@@ -307,7 +307,7 @@ end;
 
 class function TSQLParser.New: ISQLParser;
 begin
-  Result := TSQLParser.Create;
+  Result := Create;
 end;
 
 end.

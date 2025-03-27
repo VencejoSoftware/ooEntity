@@ -40,12 +40,14 @@ type
 
   IDataFieldList = interface(IIterableList<IDataField>)
     ['{D9D96C67-D023-4035-B51F-9C1EB628F2BF}']
+    function ItemByName(const Name: String): IDataField;
     function FilterByConstraint(const Constraint: TDataFieldConstraint): IDataFieldList;
     function ToString(const FieldNameFormat: IFieldNameFormat): String;
   end;
 
   TDataFieldList = class sealed(TIterableList<IDataField>, IDataFieldList)
   public
+    function ItemByName(const Name: String): IDataField;
     function FilterByConstraint(const Constraint: TDataFieldConstraint): IDataFieldList;
     function ToString(const FieldNameFormat: IFieldNameFormat): String; reintroduce;
     class function New: IDataFieldList;
@@ -85,7 +87,7 @@ end;
 class function TDataField.New(const Field: IField; const Kind: TDataFieldKind;
   const Constraints: TDataFieldConstraintSet; const Required: Boolean): IDataField;
 begin
-  Result := TDataField.Create(Field, Kind, Constraints, Required);
+  Result := Create(Field, Kind, Constraints, Required);
 end;
 
 { TDataFieldList }
@@ -112,9 +114,19 @@ begin
       Result := Result + ',' + FieldNameFormat.GetName(Item.Name);
 end;
 
+function TDataFieldList.ItemByName(const Name: String): IDataField;
+var
+  Item: IDataField;
+begin
+  Result := nil;
+  for Item in Self do
+    if SameText(Name, Item.Name) then
+      Exit(Item);
+end;
+
 class function TDataFieldList.New: IDataFieldList;
 begin
-  Result := TDataFieldList.Create;
+  Result := Create;
 end;
 
 end.

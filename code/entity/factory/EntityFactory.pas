@@ -18,7 +18,7 @@ type
   public
     function Build(const Dataset: TDataSet): IEntity;
     function BuildList(const Dataset: TDataSet; const List: IEntityList<IEntity>): Boolean;
-    function DoBuildList<T: IEntity>(const Dataset: TDataSet; const List: IEntityList<T>;
+    class function DoBuildList<T: IEntity>(const Dataset: TDataSet; const List: IEntityList<T>;
       const Callback: TBuildEntityCallback<T>): Boolean;
     class function New: IEntityFactory;
   end;
@@ -38,7 +38,7 @@ begin
   Result := DoBuildList<IEntity>(Dataset, List, Build);
 end;
 
-function TEntityFactory.DoBuildList<T>(const Dataset: TDataSet; const List: IEntityList<T>;
+class function TEntityFactory.DoBuildList<T>(const Dataset: TDataSet; const List: IEntityList<T>;
   const Callback: TBuildEntityCallback<T>): Boolean;
 begin
   List.Clear;
@@ -58,7 +58,7 @@ end;
 
 class function TEntityFactory.New: IEntityFactory;
 begin
-  Result := TEntityFactory.Create;
+  Result := Create;
 end;
 
 end.

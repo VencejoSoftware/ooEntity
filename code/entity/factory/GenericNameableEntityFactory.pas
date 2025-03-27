@@ -4,6 +4,7 @@ interface
 
 uses
   DB,
+  ObjectId,
   Entity, GenericEntityFactory, EntityFactory,
   ObjectName, ObjectNameFactory,
   NameableEntity;
@@ -11,18 +12,17 @@ uses
 type
   IGenericNameableEntityFactory<I: INameableEntity; IL: INameableEntityList<I> { } > = interface
     (IGenericEntityFactory<I, IL>)
-    ['{5B36923E-D3BB-4585-9308-A1443BA53FFF}']
+    ['{21E3D795-3038-4A1F-A56D-012A7D44C65C}']
   end;
 
   TGenericNameableEntityFactory<I: INameableEntity; IL: INameableEntityList<I> { } > = class(TInterfacedObject,
     IGenericNameableEntityFactory<I, IL>)
   strict private
     _ObjectNameFactory: IObjectNameFactory;
-    _EntityFactory: IEntityFactory;
   protected
-    function EntityFactory: IEntityFactory;
+    function ObjectNameFactory: IObjectNameFactory;
   public
-    function Build(const Dataset: TDataSet): I;
+    function Build(const Dataset: TDataSet): I; virtual;
     function BuildList(const Dataset: TDataSet; const List: IL): Boolean;
     function DoBuildList<T: IEntity>(const Dataset: TDataSet; const List: IEntityList<T>;
       const Callback: TBuildEntityCallback<T>): Boolean;
@@ -35,34 +35,33 @@ implementation
 
 function TGenericNameableEntityFactory<I, IL>.Build(const Dataset: TDataSet): I;
 var
-  Entity: IEntity;
+  ID: IObjectID;
   Name: IObjectName;
 begin
-  Entity := _EntityFactory.Build(Dataset);
+  ID := TObjectID.New(Dataset.FieldByName('ID').AsInteger);
   Name := _ObjectNameFactory.Build(Dataset);
-  Result := I(TNameableEntity.New(Entity, Name));
+  Result := TNameableEntity.New<I>(ID, Name);
 end;
 
 function TGenericNameableEntityFactory<I, IL>.BuildList(const Dataset: TDataSet; const List: IL): Boolean;
 begin
-  Result := TEntityFactory(_EntityFactory).DoBuildList<I>(Dataset, List, Build);
+  Result := DoBuildList<I>(Dataset, List, Build);
 end;
 
 constructor TGenericNameableEntityFactory<I, IL>.Create(const ObjectNameFactory: IObjectNameFactory);
 begin
-  _EntityFactory := TEntityFactory.New;
   _ObjectNameFactory := ObjectNameFactory;
 end;
 
 function TGenericNameableEntityFactory<I, IL>.DoBuildList<T>(const Dataset: TDataSet; const List: IEntityList<T>;
   const Callback: TBuildEntityCallback<T>): Boolean;
 begin
-  Result := TEntityFactory(_EntityFactory).DoBuildList<T>(Dataset, List, Callback);
+  Result := TEntityFactory.DoBuildList<T>(Dataset, List, Callback);
 end;
 
-function TGenericNameableEntityFactory<I, IL>.EntityFactory: IEntityFactory;
+function TGenericNameableEntityFactory<I, IL>.ObjectNameFactory: IObjectNameFactory;
 begin
-  Result := _EntityFactory;
+  Result := _ObjectNameFactory;
 end;
 
 class function TGenericNameableEntityFactory<I, IL>.New(const ObjectNameFactory: IObjectNameFactory)

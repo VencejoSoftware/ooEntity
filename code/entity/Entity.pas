@@ -10,16 +10,18 @@ type
   IEntity = interface
     ['{B6F78DDD-A39F-4DB2-966E-FE3235DBCA00}']
     function Id: IObjectID;
+    function HasId: Boolean;
     procedure UpdateId(const Id: IObjectID);
   end;
 
-  TEntity = class sealed(TInterfacedObject, IEntity)
+  TEntity = class(TInterfacedObject, IEntity)
   strict private
     _Id: IObjectID;
   public
     function Id: IObjectID;
+    function HasId: Boolean;
     procedure UpdateId(const Id: IObjectID);
-    constructor Create(const Id: IObjectID);
+    constructor Create(const Id: IObjectID); virtual;
     class function New(const Id: IObjectID): IEntity;
     class function NewWithoutId: IEntity;
   end;
@@ -42,6 +44,11 @@ begin
   Result := _Id;
 end;
 
+function TEntity.HasId: Boolean;
+begin
+  Result := Assigned(_Id);
+end;
+
 procedure TEntity.UpdateId(const Id: IObjectID);
 begin
   _Id := Id;
@@ -54,12 +61,12 @@ end;
 
 class function TEntity.New(const Id: IObjectID): IEntity;
 begin
-  Result := TEntity.Create(Id);
+  Result := Create(Id);
 end;
 
 class function TEntity.NewWithoutId: IEntity;
 begin
-  Result := TEntity.Create(nil);
+  Result := Create(nil);
 end;
 
 { TEntityList<T> }
@@ -76,7 +83,7 @@ end;
 
 class function TEntityList<T>.New: IEntityList<T>;
 begin
-  Result := TEntityList<T>.Create;
+  Result := Create;
 end;
 
 end.

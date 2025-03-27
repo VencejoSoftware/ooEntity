@@ -126,7 +126,7 @@ var
 begin
   if not Assigned(DataField) or not Assigned(Value) then
     if Supports(DataField, IAutoIncrementDataField) then
-      Result := IntToStr((DataField as IAutoIncrementDataField).AutoIncrementFactory.Next)
+      Result := IntToStr((DataField as IAutoIncrementDataField).Sequence.Next)
     else
       Result := 'NULL'
   else
@@ -151,7 +151,7 @@ end;
 
 class function TValueSyntax.New(const ValueFormatDataKindLinkList: IValueFormatDataKindLinkList): IValueSyntax;
 begin
-  Result := TValueSyntax.Create(ValueFormatDataKindLinkList);
+  Result := Create(ValueFormatDataKindLinkList);
 end;
 
 end.

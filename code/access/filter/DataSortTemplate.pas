@@ -28,14 +28,14 @@ begin
       Result := '%s ASC';
     Descending:
       Result := '%s DESC';
-  Else
+  else
     Result := '%s';
   end;
 end;
 
 class function TDataSortTemplate.New: IDataSortTemplate;
 begin
-  Result := TDataSortTemplate.Create;
+  Result := Create;
 end;
 
 end.

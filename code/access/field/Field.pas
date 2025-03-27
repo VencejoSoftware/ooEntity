@@ -46,7 +46,7 @@ end;
 
 class function TField.New(const Name: String): IField;
 begin
-  Result := TField.Create(Name);
+  Result := Create(Name);
 end;
 
 { TFieldList }
@@ -63,7 +63,7 @@ end;
 
 class function TFieldList.New: IFieldList;
 begin
-  Result := TFieldList.Create;
+  Result := Create;
 end;
 
 end.

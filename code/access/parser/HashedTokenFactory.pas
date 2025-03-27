@@ -23,8 +23,8 @@ type
 
 implementation
 
-function THashedTokenFactory.FindHashedToken(const Text: string; const InitialPos: integer;
-  const Separator: String): IHashedToken;
+function THashedTokenFactory.FindHashedToken(const Text: string; const InitialPos: integer; const Separator: String)
+  : IHashedToken;
 var
   StartAt, EndAt: integer;
   ParsedValue: string;
@@ -63,8 +63,7 @@ end;
 
 class function THashedTokenFactory.New: IHashedTokenFactory;
 begin
-  Result := THashedTokenFactory.Create;
+  Result := Create;
 end;
 
 end.
-

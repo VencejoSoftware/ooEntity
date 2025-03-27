@@ -12,25 +12,33 @@ type
     function GetOne(const ID: IObjectId): I;
     function GetMany(const List: IL): Boolean;
     function Exists(const Entity: I): Boolean;
+    function ExistsById(const ID: IObjectId): Boolean;
     function Remove(const Entity: I): Boolean;
-    function Update(const Entity: I): Boolean;
-    function Insert(const Entity: I): Boolean;
-    function Save(const Entity: I): Boolean;
+    function Update(const Entity: I): I;
+    function Insert(const Entity: I): I;
+    function Save(const Entity: I): I;
+    function InsertMany(const List: IL): Boolean;
+    function UpdateMany(const List: IL): Boolean;
+    function SaveMany(const List: IL): Boolean;
   end;
 
   TEntityService<I: IEntity; IL: IEntityList<I> { } > = class(TInterfacedObject, IEntityService<I, IL>)
   strict private
     _Repository: IEntityRepository<I, IL>;
   protected
-    function Repository: IEntityRepository<I, IL>;
+    function Repository: IEntityRepository<I, IL>; virtual;
   public
     function GetOne(const ID: IObjectId): I;
     function GetMany(const List: IL): Boolean;
     function Exists(const Entity: I): Boolean;
+    function ExistsById(const ID: IObjectId): Boolean;
     function Remove(const Entity: I): Boolean;
-    function Update(const Entity: I): Boolean;
-    function Insert(const Entity: I): Boolean;
-    function Save(const Entity: I): Boolean;
+    function Update(const Entity: I): I;
+    function Insert(const Entity: I): I;
+    function Save(const Entity: I): I;
+    function InsertMany(const List: IL): Boolean;
+    function UpdateMany(const List: IL): Boolean;
+    function SaveMany(const List: IL): Boolean;
     constructor Create(const Repository: IEntityRepository<I, IL>); virtual;
     class function New(const Repository: IEntityRepository<I, IL>): IEntityService<I, IL>;
   end;
@@ -52,6 +60,11 @@ begin
   Result := _Repository.Exists(Entity);
 end;
 
+function TEntityService<I, IL>.ExistsById(const ID: IObjectId): Boolean;
+begin
+  Result := _Repository.ExistsById(ID);
+end;
+
 function TEntityService<I, IL>.Remove(const Entity: I): Boolean;
 begin
   Result := _Repository.Delete(Entity.ID);
@@ -62,19 +75,34 @@ begin
   Result := _Repository;
 end;
 
-function TEntityService<I, IL>.Update(const Entity: I): Boolean;
+function TEntityService<I, IL>.Update(const Entity: I): I;
 begin
   Result := _Repository.Update(Entity);
 end;
 
-function TEntityService<I, IL>.Insert(const Entity: I): Boolean;
+function TEntityService<I, IL>.Insert(const Entity: I): I;
 begin
   Result := _Repository.Insert(Entity);
 end;
 
-function TEntityService<I, IL>.Save(const Entity: I): Boolean;
+function TEntityService<I, IL>.Save(const Entity: I): I;
 begin
   Result := _Repository.Upsert(Entity);
+end;
+
+function TEntityService<I, IL>.InsertMany(const List: IL): Boolean;
+begin
+  Result := _Repository.InsertMany(List);
+end;
+
+function TEntityService<I, IL>.UpdateMany(const List: IL): Boolean;
+begin
+  Result := _Repository.UpdateMany(List);
+end;
+
+function TEntityService<I, IL>.SaveMany(const List: IL): Boolean;
+begin
+  Result := _Repository.UpsertMany(List);
 end;
 
 constructor TEntityService<I, IL>.Create(const Repository: IEntityRepository<I, IL>);

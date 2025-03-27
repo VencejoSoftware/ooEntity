@@ -24,7 +24,8 @@ type
     function ValueList: IValueList;
     function Concatenator: String;
     constructor Create(const Values: array of IValue; const Concatenator: String);
-    class function New(const Values: array of IValue; const Concatenator: String = ','): IValueArray;
+    class function New(const Values: array of IValue; const Concatenator: String = ','): IValueArray; overload;
+    class function New(const Concatenator: String = ','): IValueArray; overload;
   end;
 
 implementation
@@ -73,7 +74,12 @@ end;
 
 class function TValueArray.New(const Values: array of IValue; const Concatenator: String): IValueArray;
 begin
-  Result := TValueArray.Create(Values, Concatenator);
+  Result := Create(Values, Concatenator);
+end;
+
+class function TValueArray.New(const Concatenator: String): IValueArray;
+begin
+  Result := Create([], Concatenator);
 end;
 
 end.

@@ -41,7 +41,7 @@ end;
 class function TDataFieldCachedService.New(const Service: IDataFieldService; const SecondsToExpire: NativeUInt)
   : IDataFieldService;
 begin
-  Result := TDataFieldCachedService.Create(Service, SecondsToExpire);
+  Result := Create(Service, SecondsToExpire);
 end;
 
 end.

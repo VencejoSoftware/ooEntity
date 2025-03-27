@@ -52,7 +52,7 @@ end;
 
 class function TDataSortSQL.New: IDataSortSQL;
 begin
-  Result := TDataSortSQL.Create;
+  Result := Create;
 end;
 
 end.

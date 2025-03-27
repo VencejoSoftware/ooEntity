@@ -102,7 +102,7 @@ end;
 
 class function TFirebirdSequenceRepository.New(const DatabaseEngine: IDatabaseEngine): ISequenceRepository;
 begin
-  Result := TFirebirdSequenceRepository.Create(DatabaseEngine);
+  Result := Create(DatabaseEngine);
 end;
 
 end.

@@ -71,7 +71,7 @@ end;
 
 class function TDataValue.New(const DataField: IDataField; const Value: IValue): IDataValue;
 begin
-  Result := TDataValue.Create(DataField, Value);
+  Result := Create(DataField, Value);
 end;
 
 { TDataValueList }
@@ -88,7 +88,7 @@ end;
 
 class function TDataValueList.New: IDataValueList;
 begin
-  Result := TDataValueList.Create;
+  Result := Create;
 end;
 
 end.

@@ -13,21 +13,29 @@ type
   end;
 
   TObjectNameFactory = class sealed(TInterfacedObject, IObjectNameFactory)
+  strict private
+    _FieldName: String;
   public
     function Build(const Dataset: TDataset): IObjectName;
-    class function New: IObjectNameFactory;
+    constructor Create(const FieldName: String);
+    class function New(const FieldName: String = 'NAME'): IObjectNameFactory;
   end;
 
 implementation
 
 function TObjectNameFactory.Build(const Dataset: TDataset): IObjectName;
 begin
-  Result := TObjectName.New(Dataset.FieldByName('NAME').AsString);
+  Result := TObjectName.New(Dataset.FieldByName(_FieldName).AsString);
 end;
 
-class function TObjectNameFactory.New: IObjectNameFactory;
+constructor TObjectNameFactory.Create(const FieldName: String);
 begin
-  Result := TObjectNameFactory.Create;
+  _FieldName := FieldName;
+end;
+
+class function TObjectNameFactory.New(const FieldName: String): IObjectNameFactory;
+begin
+  Result := Create(FieldName);
 end;
 
 end.

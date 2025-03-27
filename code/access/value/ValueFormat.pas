@@ -141,10 +141,11 @@ end;
 { TLogicFormat }
 
 function TLogicValueFormat.Parse(const Value: IValue): String;
-const
-  BOOLEAN_TEXT: array [boolean] of string = ('0', '-1');
 begin
-  Result := BOOLEAN_TEXT[Value.Content.VBoolean];
+  if Value.Content.VBoolean then
+    Result := '-1'
+  else
+    Result := '0';
 end;
 
 { TValueArrayFormat }
@@ -177,7 +178,7 @@ end;
 
 class function TListValueFormat.New(const ValueFormat: IValueFormat): IValueFormat;
 begin
-  Result := TListValueFormat.Create(ValueFormat);
+  Result := Create(ValueFormat);
 end;
 
 end.

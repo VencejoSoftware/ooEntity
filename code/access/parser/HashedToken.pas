@@ -123,7 +123,7 @@ end;
 
 class function THashedTokenList.New: IHashedTokenList;
 begin
-  Result := THashedTokenList.Create;
+  Result := Create;
 end;
 
 end.

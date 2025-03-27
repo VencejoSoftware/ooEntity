@@ -157,7 +157,7 @@ end;
 
 class function TSQLTableCommandFactory.New: ISQLTableCommandFactory;
 begin
-  Result := TSQLTableCommandFactory.Create;
+  Result := Create;
 end;
 
 end.

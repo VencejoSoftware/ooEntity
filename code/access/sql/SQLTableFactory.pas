@@ -44,7 +44,7 @@ end;
 
 class function TSQLTableFactory.New(const DataFieldService: IDataFieldService): ISQLTableFactory;
 begin
-  Result := TSQLTableFactory.Create(DataFieldService);
+  Result := Create(DataFieldService);
 end;
 
 end.

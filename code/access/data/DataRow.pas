@@ -59,14 +59,14 @@ end;
 
 class function TDataRow.New(const DataValueList: IDataValueList): IDataRow;
 begin
-  Result := TDataRow.Create(DataValueList);
+  Result := Create(DataValueList);
 end;
 
 { TDataRowList }
 
 class function TDataRowList.New: IDataRowList;
 begin
-  Result := TDataRowList.Create;
+  Result := Create;
 end;
 
 end.

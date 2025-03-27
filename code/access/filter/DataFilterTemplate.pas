@@ -31,6 +31,8 @@ begin
     In_:
       Result := '%s IN (%s)';
     Like_:
+      Result := '%s LIKE %s';
+    LikeInsensitive_:
       Result := 'UPPER(%s) LIKE UPPER(%s)';
     Between_:
       Result := '%s BETWEEN %s AND %s';
@@ -56,7 +58,7 @@ end;
 
 class function TDataFilterTemplate.New: IDataFilterTemplate;
 begin
-  Result := TDataFilterTemplate.Create;
+  Result := Create;
 end;
 
 end.

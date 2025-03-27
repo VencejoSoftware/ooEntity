@@ -47,7 +47,7 @@ class function TFieldNameFormat.New: IFieldNameFormat;
 const
   RESERVED_FIELDS: array [0 .. 1] of string = ('USER', 'PASSWORD');
 begin
-  Result := TFieldNameFormat.Create(RESERVED_FIELDS, '"');
+  Result := Create(RESERVED_FIELDS, '"');
 end;
 
 end.

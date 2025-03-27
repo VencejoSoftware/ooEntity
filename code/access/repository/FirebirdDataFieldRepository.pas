@@ -11,7 +11,7 @@ uses
   Field, DataField, Value, DataValue,
   SQLParser,
   DataFieldFactory,
-  SequenceRepository, AutoIncrementRepositoryFactory, AutoIncrementFactory, FirebirdSequenceRepository,
+  SequenceRepository, SequenceFactory, FirebirdSequenceRepository,
   DataFieldRepository;
 
 type
@@ -19,7 +19,6 @@ type
   strict private
     _DatabaseEngine: IDatabaseEngine;
     _SQLParser: ISQLParser;
-    _SequenceRepository: ISequenceRepository;
     _Factory: IDataFieldFactory;
   public
     function GetFields(const DataObjectName: String): IDataFieldList;
@@ -78,14 +77,14 @@ const
     '    AND rc.rdb$relation_name = rf.rdb$relation_name) AS FIELD_CONSTRAINT,' + //
     '  (SELECT TRIM(rdb$generator_name) FROM rdb$generators' + //
     '   WHERE rdb$system_flag IS DISTINCT FROM 1' + //
-    '    AND TRIM(rdb$generator_name) LIKE ''%%'' || TRIM(rf.rdb$relation_name) || ''_'' || TRIM(rf.rdb$field_name)) AS SEQUENCE_NAME '
+    '    AND TRIM(rdb$generator_name) SIMILAR TO ''(SEQ_)?'' || TRIM(rf.rdb$relation_name) || ''_'' || TRIM(rf.rdb$field_name)) AS SEQUENCE_NAME '
     + //
     'FROM rdb$relation_fields rf' + //
     '  JOIN RDB$FIELDS f ON rf.RDB$FIELD_SOURCE = f.RDB$FIELD_NAME' + //
     '  JOIN rdb$relations r ON rf.rdb$relation_name = r.rdb$relation_name' + //
     '    AND r.rdb$view_blr IS NULL AND (r.rdb$system_flag IS NULL OR r.rdb$system_flag = 0) ' + //
     'WHERE' + //
-    '  rf.rdb$relation_name = {{OBJECT_NAME}} ' + //
+    '  rf.rdb$relation_name = REPLACE({{OBJECT_NAME}}, ''"'', '''') ' + //
     'ORDER BY' + //
     '  rf.rdb$field_position';
 {$ENDREGION}
@@ -94,7 +93,6 @@ var
   Params: IDataValueList;
   ExecutionResult: IExecutionResult;
   Dataset: TDataset;
-  AutoIncrementFactory: IAutoIncrementFactory;
 begin
   Result := nil;
   Params := TDataValueList.New;
@@ -106,28 +104,23 @@ begin
   begin
     Dataset := (ExecutionResult as IDatasetExecution).Dataset;
     if not Dataset.IsEmpty then
-    begin
-      if Dataset.FieldByName('SEQUENCE_NAME').IsNull then
-        AutoIncrementFactory := nil
-      else
-        AutoIncrementFactory := TAutoIncrementRepositoryFactory.New(Dataset.FieldByName('SEQUENCE_NAME').AsString,
-          _SequenceRepository);
-      Result := _Factory.BuildDataFieldList(Dataset, AutoIncrementFactory);
-    end;
+      Result := _Factory.BuildDataFieldList(Dataset);
   end;
 end;
 
 constructor TFirebirdDataFieldRepository.Create(const DatabaseEngine: IDatabaseEngine);
+var
+  SequenceFactory: ISequenceFactory;
 begin
   _DatabaseEngine := DatabaseEngine;
   _SQLParser := TSQLParser.New;
-  _Factory := TDataFieldFactory.New;
-  _SequenceRepository := TFirebirdSequenceRepository.New(_DatabaseEngine);
+  SequenceFactory := TSequenceDataFactory.New(TFirebirdSequenceRepository.New(_DatabaseEngine));
+  _Factory := TDataFieldFactory.New(SequenceFactory);
 end;
 
 class function TFirebirdDataFieldRepository.New(const DatabaseEngine: IDatabaseEngine): IDataFieldRepository;
 begin
-  Result := TFirebirdDataFieldRepository.Create(DatabaseEngine);
+  Result := Create(DatabaseEngine);
 end;
 
 end.

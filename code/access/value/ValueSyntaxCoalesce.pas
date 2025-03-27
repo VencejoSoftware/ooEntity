@@ -35,7 +35,7 @@ end;
 
 class function TValueSyntaxCoalesce.New: IValueSyntax;
 begin
-  Result := TValueSyntaxCoalesce.Create;
+  Result := Create;
 end;
 
 end.

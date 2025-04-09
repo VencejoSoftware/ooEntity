@@ -33,6 +33,7 @@ type
     SPACE = ' ';
     ORDER_BY = 'ORDER BY';
     WHERE = 'WHERE';
+    RESERVED_WORD_DELIMITER = '"';
   strict private
     _TokenFactory: ITokenFactory;
     _HashedTokenFactory: IHashedTokenFactory;
@@ -55,6 +56,7 @@ type
     function FindOrderByPosition(const SQL: String): Integer;
     function GetLastSubSelect(const SQL: string): Integer;
     function FindWherePosition(const SQL: String): Integer;
+    function UnquoteReservedWord(const Text: String): String;
   public
     function ResolveSyntax(const SQL: String; const DataObjectName: String;
       const DataFieldList: IDataFieldList): String;
@@ -122,8 +124,16 @@ begin
   begin
     if Length(Result) > 1 then
       Result := Result + ITEM_SEPARATOR;
-    Result := Result + TToken.TAG_START + DataField.Name + TToken.TAG_END;
+    Result := Result + TToken.TAG_START + UnquoteReservedWord(DataField.Name) + TToken.TAG_END;
   end;
+end;
+
+function TSQLParser.UnquoteReservedWord(const Text: String): String;
+begin
+  if (Text[1] = RESERVED_WORD_DELIMITER) and (Text[Length(Text)] = RESERVED_WORD_DELIMITER) then
+    Result := Copy(Text, 2, Length(Text) - 2)
+  else
+    Result := Text;
 end;
 
 function TSQLParser.BuildFieldParameters(const DataFieldList: IDataFieldList;
@@ -136,8 +146,8 @@ begin
   begin
     if Length(Result) > 1 then
       Result := Result + ITEM_SEPARATOR;
-    Result := Result + FieldNameFormat.GetName(DataField.Name) + '=' + TToken.TAG_START + DataField.Name +
-      TToken.TAG_END;
+    Result := Result + FieldNameFormat.GetName(DataField.Name) + '=' + TToken.TAG_START +
+      UnquoteReservedWord(DataField.Name) + TToken.TAG_END;
   end;
 end;
 

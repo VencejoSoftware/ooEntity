@@ -12,18 +12,18 @@ type
     function Name: IObjectName;
   end;
 
-  TNameableEntity = class(TInterfacedObject, INameableEntity)
+  TNameableEntity = class(TEntity, INameableEntity)
   strict private
-    _Entity: IEntity;
     _Name: IObjectName;
   public
-    function Id: IObjectID;
-    procedure UpdateId(const Id: IObjectID);
     function Name: IObjectName;
-    constructor Create(const Entity: IEntity; const Name: IObjectName);
-    class function New(const Entity: IEntity; const Name: IObjectName): INameableEntity; overload;
-    class function NewByCode(const Code: Integer): INameableEntity; overload;
+    constructor Create(const ID: IObjectId; const Name: IObjectName); reintroduce; virtual;
+    class function New<T: INameableEntity>(const ID: IObjectId; const Name: IObjectName): T; overload;
+    class function New(const ID: IObjectId; const Name: IObjectName): INameableEntity; overload;
+    class function NewWithOutID<T: INameableEntity>(const Name: IObjectName): T; overload;
     class function NewWithOutID(const Name: IObjectName): INameableEntity; overload;
+    class function NewByCode<T: INameableEntity>(const Code: Integer): T; overload;
+    class function NewByCode(const Code: Integer): INameableEntity; overload;
   end;
 
   INameableEntityList<T: INameableEntity> = interface(IEntityList<T>)
@@ -32,46 +32,53 @@ type
 
   TNameableEntityList<T: INameableEntity> = class(TEntityList<T>, INameableEntityList<T>)
   public
-    class function New: INameableEntityList<T>; overload;
-    class function New<I: IInterface>: I; overload;
+    class function New: INameableEntityList<T>;
   end;
 
 implementation
-
-function TNameableEntity.Id: IObjectID;
-begin
-  Result := _Entity.Id;
-end;
-
-procedure TNameableEntity.UpdateId(const Id: IObjectID);
-begin
-  _Entity.UpdateId(Id);
-end;
 
 function TNameableEntity.Name: IObjectName;
 begin
   Result := _Name;
 end;
 
-constructor TNameableEntity.Create(const Entity: IEntity; const Name: IObjectName);
+constructor TNameableEntity.Create(const ID: IObjectId; const Name: IObjectName);
 begin
-  _Entity := Entity;
+  inherited Create(ID);
   _Name := Name;
 end;
 
-class function TNameableEntity.New(const Entity: IEntity; const Name: IObjectName): INameableEntity;
+class function TNameableEntity.New<T>(const ID: IObjectId; const Name: IObjectName): T;
+var
+  NameableEntity: INameableEntity;
 begin
-  Result := Create(Entity, Name);
+  NameableEntity := Create(ID, Name);
+  Result := T(NameableEntity);
+end;
+
+class function TNameableEntity.New(const ID: IObjectId; const Name: IObjectName): INameableEntity;
+begin
+  Result := Create(ID, Name);
 end;
 
 class function TNameableEntity.NewByCode(const Code: Integer): INameableEntity;
 begin
-  Result := TNameableEntity.New(TEntity.New(TObjectID.New(Code)), TObjectName.NewEmpty);
+  Result := New(TObjectID.New(Code), nil);
+end;
+
+class function TNameableEntity.NewByCode<T>(const Code: Integer): T;
+begin
+  Result := New<T>(TObjectID.New(Code), TObjectName.NewEmpty);
 end;
 
 class function TNameableEntity.NewWithOutID(const Name: IObjectName): INameableEntity;
 begin
-  Result := TNameableEntity.Create(nil, Name);
+  Result := New(nil, Name);
+end;
+
+class function TNameableEntity.NewWithOutID<T>(const Name: IObjectName): T;
+begin
+  Result := New<T>(nil, Name);
 end;
 
 { TNameableEntityList<T> }
@@ -79,11 +86,6 @@ end;
 class function TNameableEntityList<T>.New: INameableEntityList<T>;
 begin
   Result := Create;
-end;
-
-class function TNameableEntityList<T>.New<I>: I;
-begin
-  Result := I(TNameableEntityList<T>.New);
 end;
 
 end.

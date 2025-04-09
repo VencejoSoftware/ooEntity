@@ -34,7 +34,7 @@ end;
 
 class function TDataFieldService.New(const Repository: IDataFieldRepository): IDataFieldService;
 begin
-  Result := TDataFieldService.Create(Repository);
+  Result := Create(Repository);
 end;
 
 end.

@@ -60,7 +60,7 @@ end;
 
 class function TCalculatedDataField.New(const Code: String): ICalculatedDataField;
 begin
-  Result := TCalculatedDataField.Create(Code);
+  Result := Create(Code);
 end;
 
 end.

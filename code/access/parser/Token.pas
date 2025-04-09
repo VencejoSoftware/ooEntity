@@ -78,7 +78,7 @@ end;
 
 class function TToken.New(const Name: String; const StartAt, EndAt: Integer): IToken;
 begin
-  Result := TToken.Create(Name, StartAt, EndAt);
+  Result := Create(Name, StartAt, EndAt);
 end;
 
 class function TToken.TokenizeText(const Text: String): String;
@@ -114,7 +114,7 @@ end;
 
 class function TTokenList.New: ITokenList;
 begin
-  Result := TTokenList.Create;
+  Result := Create;
 end;
 
 end.

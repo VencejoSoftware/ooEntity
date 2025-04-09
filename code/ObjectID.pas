@@ -38,7 +38,7 @@ end;
 
 class function TObjectID.New(const Value: NativeInt): IObjectID;
 begin
-  Result := TObjectID.Create(Value);
+  Result := Create(Value);
 end;
 
 end.

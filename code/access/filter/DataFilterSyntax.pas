@@ -108,7 +108,7 @@ end;
 class function TDataFilterSyntax.New(const ValueSyntax: IValueSyntax; const DataFilterTemplate: IDataFilterTemplate)
   : IDataFilterSyntax;
 begin
-  Result := TDataFilterSyntax.Create(ValueSyntax, DataFilterTemplate);
+  Result := Create(ValueSyntax, DataFilterTemplate);
 end;
 
 end.

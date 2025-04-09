@@ -17,6 +17,7 @@ type
     TEN_MINUTES = 600;
     HALF_AN_HOUR = 1800;
     AN_HOUR = 3600;
+    HALF_DAY = 43200;
     A_DAY = 86400;
     A_WEEK = 604800;
     A_MONTH = 2.628E+6;
@@ -46,6 +47,7 @@ type
     function ItemByCode(const Code: WideString): T;
     function Update(const Code: WideString; const Entity: T): Boolean;
     procedure Remove(const Code: WideString);
+    procedure Invalidate;
   end;
 
   TEntityCachedList<T> = class(TInterfacedObject, IEntityCachedList<T>)
@@ -63,6 +65,7 @@ type
     function ItemByCode(const Code: WideString): T;
     function Update(const Code: WideString; const Entity: T): Boolean;
     procedure Remove(const Code: WideString);
+    procedure Invalidate;
     constructor Create(const Comparator: TEntityComparator; const SecondsToExpire: NativeUInt);
     destructor Destroy; override;
     class function New(const Comparator: TEntityComparator; const SecondsToExpire: NativeUInt): IEntityCachedList<T>;
@@ -199,6 +202,11 @@ begin
   Item := EntityCachedByCode(Code);
   if Assigned(Item) then
     _List.Remove(Item);
+end;
+
+procedure TEntityCachedList<T>.Invalidate;
+begin
+  _List.Clear;
 end;
 
 constructor TEntityCachedList<T>.Create(const Comparator: TEntityComparator; const SecondsToExpire: NativeUInt);

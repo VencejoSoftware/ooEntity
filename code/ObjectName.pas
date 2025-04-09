@@ -8,39 +8,39 @@ uses
 type
   IObjectName = interface
     ['{38C59B6F-99FF-488E-9E38-618DE0CD4EA2}']
-    function Text: string;
+    function Text: WideString;
   end;
 
   TObjectName = class sealed(TInterfacedObject, IObjectName)
   strict private
-    _Text: string;
+    _Text: WideString;
   public
-    function Text: string;
-    constructor Create(const Text: string);
-    class function New(const Text: string): IObjectName;
+    function Text: WideString;
+    constructor Create(const Text: WideString);
+    class function New(const Text: WideString): IObjectName;
     class function NewEmpty: IObjectName;
   end;
 
 implementation
 
-function TObjectName.Text: string;
+function TObjectName.Text: WideString;
 begin
   Result := _Text;
 end;
 
-constructor TObjectName.Create(const Text: string);
+constructor TObjectName.Create(const Text: WideString);
 begin
   _Text := Text;
 end;
 
-class function TObjectName.New(const Text: string): IObjectName;
+class function TObjectName.New(const Text: WideString): IObjectName;
 begin
-  Result := TObjectName.Create(Text);
+  Result := Create(Text);
 end;
 
 class function TObjectName.NewEmpty: IObjectName;
 begin
-  Result := TObjectName.Create(EmptyStr);
+  Result := Create(EmptyStr);
 end;
 
 end.

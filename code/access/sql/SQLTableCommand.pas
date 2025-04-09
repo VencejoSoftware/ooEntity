@@ -75,7 +75,7 @@ end;
 
 class function TSQLTableCommandList.New: ISQLTableCommandList;
 begin
-  Result := TSQLTableCommandList.Create;
+  Result := Create;
 end;
 
 end.

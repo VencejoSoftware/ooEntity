@@ -20,6 +20,7 @@ type
     _Title, _Description: String;
   public
     function Id: IObjectID;
+    function HasId: Boolean;
     procedure UpdateId(const Id: IObjectID);
     function Title: String;
     function Description: String;
@@ -43,6 +44,11 @@ implementation
 function TDescriptableEntity.Id: IObjectID;
 begin
   Result := _Entity.Id;
+end;
+
+function TDescriptableEntity.HasId: Boolean;
+begin
+  Result := _Entity.HasId;
 end;
 
 procedure TDescriptableEntity.UpdateId(const Id: IObjectID);

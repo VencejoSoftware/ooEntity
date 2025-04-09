@@ -38,7 +38,7 @@ end;
 
 class function TDataSortSyntax.New(const DataSortTemplate: IDataSortTemplate): IDataSortSyntax;
 begin
-  Result := TDataSortSyntax.Create(DataSortTemplate);
+  Result := Create(DataSortTemplate);
 end;
 
 end.

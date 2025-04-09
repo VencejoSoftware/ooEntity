@@ -7,7 +7,7 @@ uses
   IterableList;
 
 type
-  TDataSortOrder = (None, Ascending, Descending);
+  TDataSortOrder = (Natural, Ascending, Descending);
 
   IDataSort = interface
     ['{B262B96A-4B50-400D-AD67-9C8397E6CEFC}']
@@ -57,14 +57,14 @@ end;
 
 class function TDataSort.New(const Field: IField; const Order: TDataSortOrder): IDataSort;
 begin
-  Result := TDataSort.Create(Field, Order);
+  Result := Create(Field, Order);
 end;
 
 { TDataSortList }
 
 class function TDataSortList.New: IDataSortList;
 begin
-  Result := TDataSortList.Create;
+  Result := Create;
 end;
 
 end.

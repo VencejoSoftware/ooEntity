@@ -10,8 +10,8 @@ uses
 
 type
   TDataFilterJoinMode = (None_, And_, Or_, AndNot_, OrNot_);
-  TDataFilterCompareOperator = (IsNull_, IsNotNull_, Like_, Between_, In_, Equal_, NotEqual_, Greater_, Lesser_,
-    GreaterOrEqual_, LesserOrEqual_, Template_);
+  TDataFilterCompareOperator = (IsNull_, IsNotNull_, Like_, LikeInsensitive_, Between_, In_, Equal_, NotEqual_,
+    Greater_, Lesser_, GreaterOrEqual_, LesserOrEqual_, Template_);
 
   IDataFilter = interface
     ['{EA534227-F299-4F3A-9C48-CCA47CBE6894}']
@@ -85,13 +85,13 @@ end;
 class function TDataFilter.New(const JoinMode: TDataFilterJoinMode; const DataField: IDataField;
   const ValueList: IValueList; const CompareOperator: TDataFilterCompareOperator): IDataFilter;
 begin
-  Result := TDataFilter.Create(JoinMode, DataField, ValueList, CompareOperator);
+  Result := Create(JoinMode, DataField, ValueList, CompareOperator);
 end;
 
 class function TDataFilter.NewByValue(const JoinMode: TDataFilterJoinMode; const DataField: IDataField;
   const Values: array of TVarRec; const CompareOperator: TDataFilterCompareOperator): IDataFilter;
 begin
-  Result := TDataFilter.Create(JoinMode, DataField, TValueList.NewByArray(Values), CompareOperator);
+  Result := Create(JoinMode, DataField, TValueList.NewByArray(Values), CompareOperator);
 end;
 
 { TDataFilterList }
@@ -108,7 +108,7 @@ end;
 
 class function TDataFilterList.New: IDataFilterList;
 begin
-  Result := TDataFilterList.Create;
+  Result := Create;
 end;
 
 end.

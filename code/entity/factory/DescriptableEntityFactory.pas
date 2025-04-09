@@ -50,7 +50,7 @@ end;
 
 class function TDescriptableEntityFactory.New: IDescriptableEntityFactory;
 begin
-  Result := TDescriptableEntityFactory.Create;
+  Result := Create;
 end;
 
 end.

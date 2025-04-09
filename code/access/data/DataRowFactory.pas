@@ -130,7 +130,7 @@ end;
 
 class function TDataRowFactory.New: IDataRowFactory;
 begin
-  Result := TDataRowFactory.Create;
+  Result := Create;
 end;
 
 end.

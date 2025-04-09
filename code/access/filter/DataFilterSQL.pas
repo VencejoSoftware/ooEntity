@@ -47,7 +47,7 @@ end;
 
 class function TDataFilterSQL.New: IDataFilterSQL;
 begin
-  Result := TDataFilterSQL.Create;
+  Result := Create;
 end;
 
 end.

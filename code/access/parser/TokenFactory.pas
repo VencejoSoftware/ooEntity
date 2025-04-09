@@ -59,7 +59,7 @@ end;
 
 class function TTokenFactory.New: ITokenFactory;
 begin
-  Result := TTokenFactory.Create;
+  Result := Create;
 end;
 
 end.

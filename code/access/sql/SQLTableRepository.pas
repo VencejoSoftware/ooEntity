@@ -272,7 +272,7 @@ end;
 class function TSQLTableRepository.New(const DatabaseEngine: IDatabaseEngine; const AppLog: IAppLog)
   : ISQLTableRepository;
 begin
-  Result := TSQLTableRepository.Create(DatabaseEngine, AppLog);
+  Result := Create(DatabaseEngine, AppLog);
 end;
 
 end.

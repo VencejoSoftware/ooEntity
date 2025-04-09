@@ -55,7 +55,7 @@ end;
 class function TSQLTable.New(const Name: String; const Fields: IDataFieldList; const Commands: ISQLTableCommandList)
   : ISQLTable;
 begin
-  Result := TSQLTable.Create(Name, Fields, Commands);
+  Result := Create(Name, Fields, Commands);
 end;
 
 end.

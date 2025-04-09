@@ -78,7 +78,7 @@ end;
 
 class function TKeyValue.New(const Key: String; const Value: String): IKeyValue;
 begin
-  Result := TKeyValue.Create(Key, Value);
+  Result := Create(Key, Value);
 end;
 
 class function TKeyValue.NewFromString(const Text: String; const AssignmentChar: String = ASSIGNMENT_CHAR): IKeyValue;
@@ -169,7 +169,7 @@ end;
 
 class function TKeyValueList.New: IKeyValueList;
 begin
-  Result := TKeyValueList.Create;
+  Result := Create;
 end;
 
 end.

@@ -18,11 +18,13 @@ type
     _Content: TVarRec;
   private
     function CloneVarRec(const Item: TVarRec): TVarRec;
+    procedure FreeVarRec(const Item: TVarRec);
   public
     function Content: TVarRec;
     function ToString: string; reintroduce;
     function IsEmpty: Boolean;
     constructor Create(const Content: TVarRec);
+    destructor Destroy; override;
     class function New(const Content: TVarRec): IValue;
     class function NewByVariant(const Value: Variant): IValue;
     class function NewByString(const Value: WideString): IValue;
@@ -33,6 +35,22 @@ type
   end;
 
 implementation
+
+procedure TValue.FreeVarRec(const Item: TVarRec);
+begin
+  case Item.VType of
+    vtExtended:
+      Dispose(Item.VExtended);
+    vtString:
+      Dispose(Item.VString);
+    vtCurrency:
+      Dispose(Item.VCurrency);
+    vtVariant:
+      Dispose(Item.VVariant);
+    vtInt64:
+      Dispose(Item.VInt64);
+  end;
+end;
 
 function TValue.CloneVarRec(const Item: TVarRec): TVarRec;
 var
@@ -151,9 +169,15 @@ begin
   _Content := CloneVarRec(Content);
 end;
 
+destructor TValue.Destroy;
+begin
+  FreeVarRec(_Content);
+  inherited;
+end;
+
 class function TValue.New(const Content: TVarRec): IValue;
 begin
-  Result := TValue.Create(Content);
+  Result := Create(Content);
 end;
 
 class function TValue.NewByVariant(const Value: Variant): IValue;
@@ -184,6 +208,7 @@ begin
   VarRec.VType := vtInt64;
   VarRec.VInt64^ := Value;
   Result := TValue.New(VarRec);
+  Dispose(VarRec.VInt64);
 end;
 
 class function TValue.NewByFloat(const Value: Extended): IValue;
@@ -194,6 +219,7 @@ begin
   VarRec.VType := vtExtended;
   VarRec.VExtended^ := Value;
   Result := TValue.New(VarRec);
+  Dispose(VarRec.VExtended);
 end;
 
 class function TValue.NewByBoolean(const Value: Boolean): IValue;
@@ -201,7 +227,7 @@ var
   VarRec: TVarRec;
 begin
   VarRec.VType := vtBoolean;
-  Boolean(VarRec.VBoolean) := Value;
+  VarRec.VBoolean := Value;
   Result := TValue.New(VarRec);
 end;
 
